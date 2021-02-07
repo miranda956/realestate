@@ -23,17 +23,17 @@ module.exports=(sequelize,DataTypes)=>{
                 len:[10]
             }
         },
+        city:{
+            type:DataTypes.STRING,
+            required:true,
+            allowNull:false
+        },
         gender:{
             type:DataTypes.STRING,
             allowNull:false,
             required:true
 
-        },
-        date:{
-            type:DataTypes.DATE,
-            allowNull:false,
-            required:true
-        },
+        },  
         pwd:{
             type:DataTypes.STRING,
             allowNull:false,
@@ -41,6 +41,11 @@ module.exports=(sequelize,DataTypes)=>{
         },
         
     },
+    {
+        freezeTableName:true,
+        timestamps:false
+    },
+
     {
     instanceMethods:{
         genereteHash(pwd){
@@ -50,11 +55,9 @@ module.exports=(sequelize,DataTypes)=>{
             return bcrypt.compare(pwd,this.pwd)
         }
     }    
-    },
+    }
     
-    {
-        freezeTableName:true
-    });
+    );
     Owner.associate=(models)=>{
         Owner.hasMany(models.Property,{
             foreignkey:{
@@ -64,7 +67,6 @@ module.exports=(sequelize,DataTypes)=>{
         Owner.belongsToMany(models.Client,{
             through:"lease"
         })
-
     }
     return Owner;
-}
+}   

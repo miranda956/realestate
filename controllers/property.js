@@ -1,66 +1,85 @@
 const express=require("express");
 const db=require("../models");
-const router = require("./upload");
+const upload = require("./upload");
 const Owner=require("../controllers/owner");
 // not figured out yet 
 
-module.exports=(app)=>{
-    app.get("/homes",(req,res,next)=>{
-        db.Property.findAll({})
+function router(app){
+  // -- creating new property
+
+  app.post("/api/post/property",(req,res,next)=>{
+    db.Property.create({
+      address:"pobox4",
+      of_type:"mansion",
+      lot_size:"546",
+      property_name:"rentals",
+      build_year:"2019",
+      postalcode:"50100",
+      Rooms:"9",
+      date:2020-09-09,
+      price:"900",
+      location:"kakamega",
+      description:"cjksahgvmnmcnhasjh",
+      image:"https://www.shutterstock.com/image-photo/riga-latvia-view-old-houese-st-1470631151"
+      
+    }).then((property)=>{
+      res.status(201).json(property)
+    }).catch((err)=>{
+      next(err);
+    })
+  })
+  // get all unrented homes 
+    app.get("/api/get/properties",(req,res,next)=>{
+        db.Property.findAll({
+          
+        })
         .then((data)=>{
-            res.render("homes",{
-              homes:data
-            })
+            res.status(202).json(data)
         }).catch((err)=>{
             next(err);
         })
     });
-
-    app.post("/property",Owner,(req,res,next)=>{
-      db.Property.create({
-        address:req.body.address,
-        of_type:req.body.of_type,
-        lot_size:req.body.lot_size,
-        property_name:req.body.property_name,
-        build_year:req.body.build_year,
-        postalcode:req.body.postalcode,
-        Rooms:req.body.Rooms,
-        date:req.body.date,
-        price:req.body.price,
-        location:req.body.location,
-        description:req.body.description,
-      }).then(()=>{
-        // i will figure out 
-        res.render("properties")
-
+    // view property --  by id
+    app.get('/api/get/property/:id',(req,res,next)=>{
+      db.Property.findAll({
+        where:{
+          id:1
+        }
+      }).then((home)=>{
+        res.status(202).json(home)
       }).catch((err)=>{
-        next(err);
+        next(err)
       })
     })
-// updating property
-app.patch("/",Owner,(req,res,next)=>{
-  db.Property.update({
-        address:req.body.address,
-        of_type:req.body.of_type,
-        lot_size:req.body.lot_size,
-        property_name:req.body.property_name,
-        build_year:req.body.build_year,
-        postalcode:req.body.postalcode,
-        Rooms:req.body.Rooms,
-        date:req.body.date,
-        price:req.body.price,
-        location:req.body.location,
-        description:req.body.description,
+    // creating a resource  
 
-  }).then(()=>{
-    // i will figure out 
-  res.redirect("properties")
+// patching a resource 
+app.patch("/api/update/property/:id",(req,res,next)=>{
+  db.Property.update({
+        address:"djshgvc",
+        of_type:"djbhvw wi",
+        lot_size:"333",
+        property_name:"wdiuwvbz",
+        build_year:"2020",
+        postalcode:"94857",
+        Rooms:"657",
+        date:2020-09-09,
+        price:"6000",
+        location:"dskjhg",
+        description:"aslkdhv.wqVH",
+  },{
+    where:{
+      id:2
+
+    }
+  }).then((property)=>{
+  res.status(201).json(property)
   }).catch((err)=>{
     next(err)
   })
 })
-
-    app.get("/search/keyword",(req,res,next)=>{
+// searching a resource 
+    app.get("api/search/keyword",(req,res,next)=>{
         db.Property.findAll({
             where:{
                 $or:{
@@ -98,6 +117,10 @@ app.patch("/",Owner,(req,res,next)=>{
             next(err);
         })
     })
+    // deleting a resource
 
-
+    
+    
 }
+module.exports=router;
+

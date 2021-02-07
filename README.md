@@ -1,15 +1,10 @@
 To do
-migrate from monolithic to microservices architecture :
-to paymentservice,customerservice,authentications service, api service, admin service, chat service ,mail service , marketing service 
+<!-- BOOK feature  -->
+<!-- support mail notification (nodemailer) -->
+<!-- support payment(stripe) -->
+containerize application(docker)
+load balancer and reverse proxy(NGNX)
 
-
-enable microservices to communicate through message brokers 
-
-rewrite interfaces from HTML5  to SPA in  React  and support PWA for mobile devices 
-
-support PWA for mobile devices 
-
-run the application in containers Docker 
  
 To run the application on your computer 
 

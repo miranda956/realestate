@@ -37,11 +37,7 @@ module.exports=(sequelize,DataTypes)=>{
             allowNull:false,
             required:true
         },
-        date:{
-            type:DataTypes.DATE,
-            allowNull:false,
-            required:true
-        },
+        
         pwd:{
             type:DataTypes.STRING,
             allowNull:false,
@@ -49,20 +45,25 @@ module.exports=(sequelize,DataTypes)=>{
 
         },
         
-    },{
+    },
+    {
+        freezeTableName:true,
+        timestamps:false
+    },
+    {
         instanceMethods:{
             genereteHash(pwd){
+                // @ts-ignore
                 return bcrypt.hashSync(pwd,bcrpt.genSaltSync(8));
             },
             validpassword(pwd){
+                // @ts-ignore
                 return bcrypt.compare(pwd,this.pwd)
             }
         }    
         },
     
-    {
-        freezeTableName:true
-    });
+    );
     Client.associate=(models)=>{
         Client.belongsToMany(models.Property,{
             through:"Lease"

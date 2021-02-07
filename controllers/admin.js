@@ -1,7 +1,7 @@
  // considered done 
 const db=require("../models");
 const express=require("express");
-const router=express.Router();
+
 
 function isloggedin(req,res,next){
 if(req.isAuthenticated()){
@@ -12,294 +12,188 @@ else{
 }
 
 }
+
+function router(app){
+
+    app.get("/api/staff/getall",(req,res,next)=>{{
+        db.Admin.findAll({
+            attributes:["f_name","l_name","email","contact"]
+        }).then((staff)=>{
+          res.json(staff)
+        }).catch((err)=>{
+          console.error(err)
+        })
+    }})
 // admin -signup
-router.post("admin/signup",(req,res,next)=>{
+app.post("/api/admin/create",(req,res,next)=>{
     db.Admin.create({
-        f_name:req.body.f_name,
-        l_name:req.body.l_name,
-        email:req.body.email,
-        pwd:req.body.pwd
+        f_name:"charls",
+        l_name:"gero",
+        email:"gerod@gmail.com",
+        contact:"0741402565",
+        pwd:"hhshfdgdft"
     })
     .then((data)=>{
-        res.redirect('/admin/panel')
+        res.status(201).json(data)
     }).catch((err)=>{
         next(err)
     })
 })
 // admin profile
-router.get("profile",isloggedin,(req,res,next)=>{;
-    var AdminId=req.user.id;
+app.get("/api/get/admin/:id",(req,res,next)=>{;
     db.Admin.findAll({
+        attributes:["f_name","l_name","email"],
         where:{
-            id:AdminId
+            id:1
         }
     }).then((profile)=>{
-        res.render("profile",{
-            profile:profile
-        })
-
+        res.status(201).json(profile)
     }).catch((err)=>{
         next(err);
     })
 })
 // admin edit account
-router.patch('/admin/edit/:id',isloggedin,(req,res,next)=>{
-    var AdminId=req.params.id;
+app.patch('/api/admin/edit/:id',(req,res,next)=>{
+    
     db.Admin.update({
-        f_name:req.body.f_name,
-        l_name:req.body.l_name,
-        email:req.body.email,
-        pwd:req.body.pwd, 
+        f_name:"mark",
+        l_name:"sweagter",
+        email:"sweager@gmail.com",
+        contact:"0712372773"
+ 
     },{
         where:{
-            id:AdminId
+            id:1
         }
-    }
-    )
-    .then((data)=>{
-        res.redirect('/admin/panel')
+    })
+    .then((profileupdate)=>{
+        res.status(201).json(profileupdate)
     })
     .catch((err)=>{
         next(err)
     })
 })
-// admin can delete account
-router.delete("/admin/delete/:id",isloggedin,(req,res,next)=>{
-    db.Admin.destroy({
-        where:{
-            id:req.params.id
-        }
-    }).then(()=>{
-        res.redirect("/login")
-    }).catch((err)=>{
-        next(err)
+app.get("/get/clients",(req,res,next)=>{
+    db.Client.findAll({
+        attributes:["f_name","l_name","email","gender","contact","city"]
     })
-})
+    .then((result)=>{
+        // res.status(201).json(result)
+        res.json(result)
+    }).catch((err)=>{
+        next(err);
+    })
+});
+// admin can delete account
+
 // admin managing sytem components 
 // client view for admin 
-router.get("/clients",isloggedin,(req,res,next)=>{
-    db.Client.findAll({})
-    .then((result)=>{
-        res.render('clients',{Clients:result})
-    }).catch((err)=>{
-        next(err);
-    })
-});
-
-// client search 
-router.get("/", isloggedin,(req,res,next) => {
+app.get("/api/get/clients",(req,res,next)=>{
     db.Client.findAll({
-        where:{
-            $or:{
-                f_name:{
-                    $like:"%"+req.params.keyword+"%"
-                },
-                l_name:{
-                    $like:"%"+req.params.keyword+"%"
-                },
-                email:{
-                    $like:"%"+req.params.keyword+"%"
-                },
-                contact:{
-                    $like:"%"+req.params.keyword+"%"
-                },
-                gender:{
-                    $like:"%"+req.params.keyword+"%"
-                },
-                city:{
-                    $like:"%"+req.params.keyword+"%"
-                },
-                
-            }
-        }
-    }).then((result)=>{
-        res.render("clientsearch",{
-            clientsearch:result
-        })
+        attributes:["f_name","l_name","email","gender","contact","city"]
+    })
+    .then((result)=>{
+        // res.status(201).json(result)
+        
+        res.render('client', {result, layout: 'main'});
     }).catch((err)=>{
         next(err);
     })
-  
 });
-
-
 // clients and leased property of the client 
-router.get("/leasedclients",isloggedin,(req,res,next)=>{
-    db.Lease.findAll({
-        include:[{
-            model:Property
-        }],
-        include:[{
-            model:Client
-        }]
+app.get("/api/leasedclients",(req,res,next)=>{
+    db.Client.findAll({
+        include:[db.Property]
+        
     }).then((data)=>{
-        res.render("leasedclients",{
-            leasedclients:data
-        })
+        res.status(201).json(data)
     }).catch((err)=>{
         next(err)
     })
 })
 // client & leased items 
-router.get("leasedto",isloggedin,(req,res,next)=>{
-    db.Lease.findAll({
-        include:{
-            model:Property,
-            include:[{
-                model:Client,
-                where:{
-                    id:req.params.id
-                }
-                
-            }]
+app.get("/api/get/leasedproperty/client/:id",(req,res,next)=>{
+    db.Client.findAll({
+        include:[db.Property],
+        where:{
+            id:2
         }
     }).then((data)=>{
-        res.render("leasedto",{
-            leasedto:data
-        })
-
+        res.status(201).json(data)
     }).catch((err)=>{
         next(err);
     })
 })
-
-
 // owner view for admin 
-router.get("/owner", isloggedin,(req,res,next) => {
-    db.Owner.findAll({})
+app.get("/api/get/owner",(req,res,next) => {
+    db.Owner.findAll({
+        attributes:["f_name","l_name","email","gender","contact","city"]
+    })
     .then((result)=>{
-        res.render("owner",{
-            owner:result
-        })
+        res.status(201).json(result)
     }).catch((err)=>{
         next(err);
     }) 
 });
-// owner filter by the admin
-router.get("ownerfilter",isloggedin,(req,res,next)=>{
-    db.Owner.findAll({
-        where:{
-            $or:{
-                f_name: {
-                    $like: "%" + req.params.keyword + "%"
-                  },
-                  l_name: {
-                    $like: "%" + req.params.keyword + "%"
-                  },
-                  email: {
-                    $like: "%" + req.params.keyword + "%"
-                  },
-                  contact: {
-                    $like: "%" + req.params.keyword + "%"
-                  },
-                  gender: {
-                    $like: "%" + req.params.keyword + "%"
-                  },
-
-            }
-        }
-    }).then((result)=>{
-        res.render("ownerfilter",{
-            ownerfilter:result 
-        })
-    }).catch((err)=>{
-        next(err)
-    })
-})
 
 //  specific owner by their property
-
-router.get("owner/properties/id:",isloggedin,(req,res,next)=>{
+app.get("/api/owner/properties/:id",(req,res,next)=>{
     db.Property.findAll({
-        include:[{
-            model:Owner,
-            where:{
-                id:req.params.id
-            }
-            
-        }]
-    }).then((data)=>{
-        res.render("ownerproperty",{
-            ownerproperty:data
-        })
+        include:[db.Owner]
+    },
+    {
+        where:{
+            OwnerId:4
+        }
+    }
+    ).then((data)=>{
+        res.status(201).json(data)
     }).catch((err)=>{
         next(err)
     })
-
 })
  
-// owners by their properties
-
-router.get("/owner/property",isloggedin,(req,res,next)=>{
+// owners by their leased  properties
+app.get("/api/owners/leasedproperty",(req,res,next)=>{
     db.Property.findAll({
-        include:[{
-            model:Owner
-        }]
+        include:[db.Client]
+    
     }).then((data)=>{
-        res.render("ownersdata",{
-            ownersdata:data
+        res.status(201).json(data)
+        }).catch((err)=>{
+            next(err)
         })
-    }).catch((err)=>{
-        next(err)
     })
-})
+    
+
+
+
 // owner and the leased properties 
-router.get("leased",isloggedin,(req,res,next)=>{
-    db.Lease.findAll({
-        include:[{
-            model:Owner,
-            where:{
-                id:req.params.id
-            }
-        }]
+// -- Single owner and the leased property 
+app.get("/api/owner/leasedproperty/:id",(req,res,next)=>{
+    db.Property.findAll({
+        include:[db.Client],
+        where:{
+         OwnerId:4
+        }
+    
     }).then((data)=>{
-        res.render("leased",{
-            leased:data
-
+        res.status(201).json(data)
+        }).catch((err)=>{
+            next(err)
         })
-        
-    }).catch((err)=>{
-        next(err);
     })
-
-})
-// all leased properties and their owners 
-router.get("leasedproperty",isloggedin,(req,res,next)=>{
-    db.Lease.findAll({
-        include:[{
-            model:Property
-        }],
-        include:[{
-            model:Owner
-        }]
-    }).then((data)=>{
-        res.render("leasedproperty",{
-            leasedproperty:data
-        })
-    }).catch((err)=>{
-        next(err)
-    })
-})
+    
 
 // property view for admin
- router.get("/property",isloggedin,(req,res,next)=>{
-     db.Property.findAll({})
-     .then((result)=>{
-         res.render("property",{
-             Property:result
-         })
-     }).catch((err)=>{
-         next(err)
-     })
- });
- 
+
     
-  router.get("/logout",isloggedin,(req,res,next)=>{
+  app.get("/logout",isloggedin,(req,res,next)=>{
       req.logout();
       res.redirect("/login");
   })
   /* search features */
-  router.get("property/filter",isloggedin,(req,res,next)=>{
+app.get("/api/property/filter",isloggedin,(req,res,next)=>{
     db.Property.findAll({
         where:{
             $or:{
@@ -330,15 +224,12 @@ router.get("leasedproperty",isloggedin,(req,res,next)=>{
             }
         }
     }).then((searchresult)=>{
-        res.render("properties",{
-            properties:searchresult
-
-        })
+        res.status(201).json(searchresult)
 
     }).catch((err)=>{
         next(err);
     })
       
   })
- 
+}
 module.exports=router;

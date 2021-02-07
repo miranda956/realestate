@@ -1,10 +1,5 @@
 module.exports=(sequelize,DataTypes)=>{    
 const Lease=sequelize.define("Lease",{
-    lease_no:{
-        type:DataTypes.STRING,
-        required:true,
-        allowNull:false
-    },
     start_date:{
         type:DataTypes.STRING,
         allowNull:false,
@@ -24,7 +19,9 @@ const Lease=sequelize.define("Lease",{
 
 },
 {
-    freezeTableName:true
+    freezeTableName:true,
+    timestamps:false
+
 });
 
 return Lease;

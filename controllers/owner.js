@@ -1,7 +1,7 @@
 const express=require("express");
 const db=require("../models");
 
-const router=express.Router();
+
 
 function isloggedin(req,res,next){
     if(req.isAutheticated()){
@@ -11,138 +11,123 @@ function isloggedin(req,res,next){
         return res.redirect('/login')
     }
 }
-
+function router(app){
 // owner regeters 
-router.post("/owner/signup",(req,res,next)=>{
+app.post("/api/create/owner",(req,res,next)=>{
     db.Owner.create({
-        f_name:req.body.f_name,
-        l_name:req.body.l_name,
-        email:req.body.email,
-        contact:req.body.contact,
-        gender:req.body.gender,
-        pwd:req.body.pwd
-    }).then(()=>{
-    
-        res.redirect("/login")
+        f_name:"rero",
+        l_name:"peter",
+        email:"peter@gmail.com",
+        contact:"1234567890",
+        gender:"male",
+        city:"kwisero",
+        pwd:"ijsd78378"
+    }).then((result)=>{
+        res.status(201).json(result)
     }).catch((err)=>{
         next(err)
     })
 })
 // posting home feature 
 
-router.patch('/owner/edit/id:',isloggedin,(req,res,next)=>{
-    var OwnerId=req.user.id
-    db.Owner.update({
-        f_name:req.body.f_name,
-        l_name:req.body.l_name,
-        email:req.body.email,
-        contact:req.body.contact,
-        gender:req.body.gender,
-        pwd:req.body.pwd,
-        where:{
-            id:OwnerId
 
+
+app.patch('/api/owner/edit/:id',(req,res,next)=>{
+    db.Owner.update({
+        f_name:"lashly",
+        l_name:"boby",
+        email:"fero@gmail.com",
+        contact:"0123456789",
+        gender:"male",
+        city:"kisumu"
+      
+        
+    },{
+        where:{
+            id:2
         }
     }).then((data)=>{
-        res.redirect("/owner/profile")
+        res.status(201).json(data)
+    }).catch((err)=>{
+        next(err)
+    })
+})
+// change password 
+app.patch('/api/change/password/owner/:id',(req,res,next)=>{
+    db.Owner.update({
+        pwd:"reet",
+        
+        
+    },{
+        where:{
+            id:2
+        }
+    }).then((newpwd)=>{
+        res.status(201).json(newpwd)
 
     }).catch((err)=>{
         next(err)
     })
 })
-// return owner with his properties 
-
 // owner profile
-
-router.get("/owner",isloggedin,(req,res,next)=>{
-    var OwnerId=req.user.id;
+app.get("/api/owner/profile/:id",(req,res,next)=>{
     db.Owner.findAll({
+        attributes:['f_name','l_name','email','contact','gender'],
         where:{
-            id:OwnerId
-
+            id:2
         }
     })
     .then((data)=>{
-        res.render('profile',{profile:data})
+        res.status(202).json(data)
     }).catch((err)=>{
         next(err);
     })
 })
-// owner can get all his properties
-router.get("/owner/property",isloggedin,(req,res,next)=>{
-    var OwnerId=req.user.id;
+// owners and their  his properties
+app.get("/api/get/owner/property",(req,res,next)=>{
     db.Property.findAll({
-        include:[{
-            model:Owner,
-            where:{
-                id:OwnerId
-            }
-        }]
+        include:[db.Owner]
     }).then((properties)=>{
-        res.render("properties",{
-            properties:properties
+        res.status(201).json(properties)
+    }).catch((err)=>{
+        next(err);
+    })
+})
 
-        })
+//-- owner and his properties
+app.get("/api/get/properties/owner/:id",(req,res,next)=>{
+    db.Property.findAll({
+        include:[db.Owner],
+        where:{
+            id:3
+        }
+    }).then((data)=>{
+        res.json(data)
+
     }).catch((err)=>{
         next(err);
     })
 })
 // can see all the leases he made on his properties 
-router.get("owner/report",isloggedin,(req,res,next)=>{
-    var OwnerId=req.user.id
-    db.Lease.findAll({
-        include:[{
-            model:Property
-        }],
-        include:[{
-            model:Client
-        }],
-        include:[{
-            model:Owner,
-            where:{
-                id:OwnerId
-            }
-        }]
-    }).then((data)=>{
-        res.render("ownerreport",{
-            ownerreport:data
 
-        })
 
+app.delete("/api/property/delete/:id",(req,res,next)=>{
+    db.Property.destroy({
+        where:{
+            OwnerId:2
+        }
+    }).then((destroyed)=>{
+        res.status(201).json(destroyed)
     }).catch((err)=>{
-        next(err)
+        next(err);
     })
 })
-router.delete('/owner/delete/id:',isloggedin,(req,res,next)=>{
-    var  OwnerId=req.user.id
-    db.Owner.destroy({
-        where:{
-            id:OwnerId
-        }
-    }).then(()=>{
-        res.redirect("/login")
-    }).catch((err)=>{
-        next(err)
-    })
-});
-router.get("/logout",isloggedin,(req,res)=>{
+app.get("/logout",isloggedin,(req,res)=>{
     req.logout();
     res.redirect('/login');
 });
 
 // returning owners properties 
 
-router.get("owner/properties")
- //owner deleting home  
- router.get("/property/delete/id:",isloggedin,(req,res,next)=>{
-     db.Property.destroy({
-         include:[{
-             model:Owner,
-             where:{
-                 id:req.params.id
-             }
-         }]
-     })
-     
- })
+}
 module.exports=router;

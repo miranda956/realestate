@@ -17,11 +17,17 @@ module.exports=(sequelize,DataTypes)=>{
             allowNull:false,
             required:true
         },
-        date:{
-            type:DataTypes.DATE,
+        contact:{
+            type:DataTypes.STRING,
             allowNull:false,
-            required:true
+            required:true,
+            validate:{
+                len:[10]
+            }
+
+
         },
+    
         pwd:{
             type:DataTypes.STRING,
             allowNull:false,
@@ -29,21 +35,26 @@ module.exports=(sequelize,DataTypes)=>{
         }
 
     },
+
+    {
+        freezeTableName:true,
+        timestamps:false
+    },
     {
         instanceMethods:{
             genereteHash(pwd){
+                // @ts-ignore
                 return bcrypt.hashSync(pwd,bcrpt.genSaltSync(8));
             },
             validpassword(pwd){
+                // @ts-ignore
                 return bcrypt.compare(pwd,this.pwd)
             }
         }    
         },
 
 
-    {
-        freezeTableName:true
-    });
+    );
     return Admin;
 
 

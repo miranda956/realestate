@@ -1,10 +1,6 @@
 module.exports=(sequelize,DataTypes)=>{
     const Property=sequelize.define("Property",{
-        property_no:{
-            type:DataTypes.STRING,
-            allowNull:false,
-            unique:true
-        },
+
         address:{
             type:DataTypes.STRING,
             allowNull:false,
@@ -29,12 +25,12 @@ module.exports=(sequelize,DataTypes)=>{
             required:true
 
         },
-        build_year:{
+        build_year:{  
             type:DataTypes.INTEGER,
             allowNull:false,
             required:true
 
-        },
+        },  
         postalcode:{
             type:DataTypes.STRING,
             allowNull:false,
@@ -66,14 +62,19 @@ module.exports=(sequelize,DataTypes)=>{
             allowNull:true,
             
         },
-        istaken:{
-            type:DataTypes.BOOLEAN,
-            required:true 
-        }
+        image:{
+           type:DataTypes.STRING,
+           required:true,
+           allowNull:false 
+        },
+        
+        
+    
     },
 
     {
-        freezeTableName:true
+        freezeTableName:true,
+        timestamps:false
     });
     Property.associate=(models)=>{
         Property.belongsTo(models.Owner,{
@@ -87,4 +88,4 @@ module.exports=(sequelize,DataTypes)=>{
     }
 
     return Property;
-}
+}  

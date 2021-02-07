@@ -44,20 +44,19 @@ app.use(expresswinston.errorLogger({
         })
     ]
 }));
-app.engine('handlebars',exphbs({defaultLayout:"main"}));
-app.use((req,res,next)=>{
-    res.locals.success_msg=req.flash("success_msg");
-    res.locals.error_msg=req.flash("error_msg");
-    res.locals.error=req.flash("error");
-    res.locals.user=req.user||null;
-    next();
-})
-app.set("view engine","handlebars");
 app.use(express.static("public"));
+require("./controllers/admin")(app);
+require("./controllers/client")(app)
+require("./controllers/owner")(app)
+require("./controllers/property")(app)
+app.engine('handlebars',exphbs({defaultLayout:"main"}));
+app.set("view engine","handlebars");
 db.sequelize.sync({force:false}).then(()=>{
    const port = process.env.PORT || 4500;
-   app.listen(port, () => `Server running on port ${port} 🔥`); 
+   app.listen(port,()=> 
+    console.log(`Server running on port ${port} 🔥`)); 
 }).catch((err)=>{
     console.log(err)
 });
 
+    
