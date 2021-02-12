@@ -2,9 +2,12 @@ const express =require('express');
 const cookieparser=require('cookie-parser');
 const methodoverride =require('method-override');
 const session=require('express-session');
+const cors =require('cors');
 const exphbs=require('express-handlebars');
+// @ts-ignore
 const flash =require("connect-flash");
 const bodyparser=require("body-parser");
+// @ts-ignore
 const path =require("path");
 const winston =require("winston");
 const expresswinston =require("express-winston");
@@ -15,6 +18,7 @@ const app=express();
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.text());
 app.use(bodyparser.json());
+app.use(cors());
 app.use(cookieparser());
 app.use(session({
     secret:"q2455",
@@ -25,6 +29,7 @@ app.use(methodoverride("_method"));
 app.use(expresswinston.logger({
     transports:[
         new winston.transports.Console({
+            // @ts-ignore
             json:true,
             colirize:true
         }),
@@ -36,6 +41,7 @@ app.use(expresswinston.logger({
 app.use(expresswinston.errorLogger({
     transports:[
         new winston.transports.Console({
+            // @ts-ignore
             json:true,
             colorize:true
         }),

@@ -27,11 +27,11 @@ function router(app){
 // admin -signup
 app.post("/api/admin/create",(req,res,next)=>{
     db.Admin.create({
-        f_name:"charls",
-        l_name:"gero",
-        email:"gerod@gmail.com",
-        contact:"0741402565",
-        pwd:"hhshfdgdft"
+        f_name:req.body.f_name,
+        l_name:req.body.l_name,
+        email:req.body.email,
+        contact:req.body.contact,
+        pwd:req.body.pwd
     })
     .then((data)=>{
         res.status(201).json(data)
@@ -56,14 +56,14 @@ app.get("/api/get/admin/:id",(req,res,next)=>{;
 app.patch('/api/admin/edit/:id',(req,res,next)=>{
     
     db.Admin.update({
-        f_name:"mark",
-        l_name:"sweagter",
-        email:"sweager@gmail.com",
-        contact:"0712372773"
+        f_name:req.body.f_name,
+        l_name:req.body.l_name,
+        email:req.body.email,
+        contact:req.body.contact
  
     },{
         where:{
-            id:1
+            id:req.user.id 
         }
     })
     .then((profileupdate)=>{
