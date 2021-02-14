@@ -1,4 +1,3 @@
-import vue from "vue";
 import Router from "vue-router";
 import Createclient from "../components/Client/Createclient.vue";
 import updateclient from "../components/Client/updateClent.vue";
@@ -7,19 +6,33 @@ import listproperty from "../components/Property/Listproperty.vue";
 import detailproperty from "../components/Property/detailproperty.vue";
 import login from "../components/shared/login.vue";
 import navbar from "../components/shared/Navbar.vue";
+import { createApp } from 'vue'
+import App from './App.vue'
+
 import footer from "../components/shared/footer.vue";
-vue.use(Router)
+
+createApp(App)
+.use(Router)
+
+
 
 export default new Router ({
 
     routes:[
+
+        {
+
+            path:"/",
+            name:"login",
+            component:login
+        },
         {
             path:"/createclient",
             name:"createclient",
             component:Createclient
         },
         {
-
+ 
             path:"/login",
             name:"login",
             component:login
@@ -58,3 +71,4 @@ export default new Router ({
 
     ]
 })
+

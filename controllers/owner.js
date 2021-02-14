@@ -15,13 +15,13 @@ function router(app){
 // owner regeters 
 app.post("/api/create/owner",(req,res,next)=>{
     db.Owner.create({
-        f_name:"rero",
-        l_name:"peter",
-        email:"peter@gmail.com",
-        contact:"1234567890",
-        gender:"male",
-        city:"kwisero",
-        pwd:"ijsd78378"
+        f_name:req.body.f_name,
+        l_name:req.body.l_name,
+        email:req.body.email,
+        contact:req.body.contact,
+        gender:req.body.gender,
+        city:req.body.city,
+        pwd:req.body.pwd
     }).then((result)=>{
         res.status(201).json(result)
     }).catch((err)=>{
@@ -34,17 +34,17 @@ app.post("/api/create/owner",(req,res,next)=>{
 
 app.patch('/api/owner/edit/:id',(req,res,next)=>{
     db.Owner.update({
-        f_name:"lashly",
-        l_name:"boby",
-        email:"fero@gmail.com",
-        contact:"0123456789",
-        gender:"male",
-        city:"kisumu"
+        f_name:req.body.f_name,
+        l_name:req.body.l_name,
+        email:req.body.email,
+        contact:req.body.contact,
+        gender:req.body.gender,
+        city:req.body.city
       
         
     },{
         where:{
-            id:2
+            id:req.user.id
         }
     }).then((data)=>{
         res.status(201).json(data)
@@ -55,12 +55,12 @@ app.patch('/api/owner/edit/:id',(req,res,next)=>{
 // change password 
 app.patch('/api/change/password/owner/:id',(req,res,next)=>{
     db.Owner.update({
-        pwd:"reet",
+        pwd:req.body.pwd
         
         
     },{
         where:{
-            id:2
+            id:req.user.id
         }
     }).then((newpwd)=>{
         res.status(201).json(newpwd)
@@ -74,7 +74,7 @@ app.get("/api/owner/profile/:id",(req,res,next)=>{
     db.Owner.findAll({
         attributes:['f_name','l_name','email','contact','gender'],
         where:{
-            id:2
+            id:req.user.id
         }
     })
     .then((data)=>{
@@ -99,7 +99,7 @@ app.get("/api/get/properties/owner/:id",(req,res,next)=>{
     db.Property.findAll({
         include:[db.Owner],
         where:{
-            id:3
+            id:req.user.id
         }
     }).then((data)=>{
         res.json(data)
@@ -114,7 +114,7 @@ app.get("/api/get/properties/owner/:id",(req,res,next)=>{
 app.delete("/api/property/delete/:id",(req,res,next)=>{
     db.Property.destroy({
         where:{
-            OwnerId:2
+            OwnerId:req.user.id
         }
     }).then((destroyed)=>{
         res.status(201).json(destroyed)

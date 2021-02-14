@@ -6,13 +6,13 @@ const db=require("../models");
 function router(app){
 app.post("/api/create/client",(req,res,next)=>{
     db.Client.create({
-        f_name:"arnold",
-        l_name:"wamae",
-        email:"wamae@gmail.com",
-        gender:"male",
-        contact:"0734546789",
-        city:"meru",
-        pwd:"reeuyc"
+        f_name:req.body.f_name,
+        l_name:req.user.l_name,
+        email:req.user.email,
+        gender:req.body.gender,
+        contact:req.body.contact,
+        city:req.body.city,
+        pwd:req.body.pwd
     }).then((result)=>{
         res.status(201).json(result)
     }).catch((err)=>{
@@ -23,7 +23,7 @@ app.get('/api/get/client/:id',(req,res,next)=>{
     db.Client.findAll({
         attributes:["f_name","l_name","email","gender","contact","city",],
         where:{
-            id:1
+            id:req.user.id
         }
     }).then((info)=>{
         res.status(201).json(info);
@@ -43,7 +43,7 @@ app.get("/api/client/leases/:id",(req,res,next)=>{
             // @ts-ignore
             model:Client,
             where:{
-                id:2
+                id:req.user.id
             }
         }]
     }).then((info)=>{
@@ -110,15 +110,15 @@ app.get('/api/book/property',(req,res,next)=>{
 
 app.patch('/api/client/update/:id',(req,res,next)=>{
     db.Client.update({
-        f_name:"izak",
-        l_name:"lero",
-        email:"lero@gmail.com",
-        gender:"male",
-        contact:"1234567890",
-        city:"kakamega",
+        f_name:req.body.f_name,
+        l_name:req.body.l_name,
+        email:req.body.email,
+        gender:req.body.gender,
+        contact:req.body.contact,
+        city:req.body.city
     },{
         where:{
-            id:1
+            id:req.user.id
         }
     }).then((result)=>{
         res.status(201).json(result)

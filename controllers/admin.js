@@ -44,7 +44,7 @@ app.get("/api/get/admin/:id",(req,res,next)=>{;
     db.Admin.findAll({
         attributes:["f_name","l_name","email"],
         where:{
-            id:1
+            id:req.user.id
         }
     }).then((profile)=>{
         res.status(201).json(profile)
@@ -95,7 +95,6 @@ app.get("/api/get/clients",(req,res,next)=>{
     .then((result)=>{
         // res.status(201).json(result)
         
-        res.render('client', {result, layout: 'main'});
     }).catch((err)=>{
         next(err);
     })
@@ -116,7 +115,7 @@ app.get("/api/get/leasedproperty/client/:id",(req,res,next)=>{
     db.Client.findAll({
         include:[db.Property],
         where:{
-            id:2
+            id:req.user.id
         }
     }).then((data)=>{
         res.status(201).json(data)
@@ -143,7 +142,7 @@ app.get("/api/owner/properties/:id",(req,res,next)=>{
     },
     {
         where:{
-            OwnerId:4
+            OwnerId:req.user.id
         }
     }
     ).then((data)=>{
@@ -174,7 +173,7 @@ app.get("/api/owner/leasedproperty/:id",(req,res,next)=>{
     db.Property.findAll({
         include:[db.Client],
         where:{
-         OwnerId:4
+         OwnerId:req.user.id
         }
     
     }).then((data)=>{

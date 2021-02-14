@@ -1,6 +1,5 @@
 
 <template>
-	
 	<div class="signup-form">
     <form >
 		<h2>Realproperty</h2>
@@ -11,15 +10,14 @@
 		<div class="form-group">
 		<input type="text" class="form-control" name="last_name" placeholder="Last Name" v-model="client.l_name"/>
 		</div>
-
         <div class="form-group">
-        	<input type="email" class="form-control" name="email" placeholder="Email" v-model="client.email"/>
+        <input type="email" class="form-control" name="email" placeholder="Email" v-model="client.email"/>
         </div>
 		<div class="form-group">
-            <input type="text" class="form-control" name="contact" placeholder="contact"  v-model="client.contact"/>
+         <input type="text" class="form-control" name="contact" placeholder="contact"  v-model="client.contact"/>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="city" placeholder="NANYUKI"  v-model="client.city"/>
+        <input type="text" class="form-control" name="city" placeholder="NANYUKI"  v-model="client.city"/>
         </div>
          <div class="form-group">
                             <label class="control-label col-sm-offset-2 col-sm-2" for="company">gender</label>
@@ -66,9 +64,9 @@ export default {
    methods: {
     saveclient() {
       var data = {
-        f_name:this.applicant.first_name,
-		l_name:this.applicant.last_name,
-        email:this.applicant.email,
+        f_name:this.client.f_name,
+		l_name:this.client.l_name,
+        email:this.client.email,
         gender:this.client.gender,
         contact:this.client.contact,
         city:this.client.city,
@@ -76,7 +74,7 @@ export default {
       };
       clientDataservice.createTenant(data)
         .then(response => {
-          this.applicant.id = response.data.id;
+          this.client.id = response.data.id;
           console.log(response.data);
           this.submitted = true;
         })
@@ -84,7 +82,7 @@ export default {
           console.log(e);
         });
 	},
-    newapplicant() {
+    newclient() {
       this.submitted = false;
       this.applicant = {};
     }
@@ -113,7 +111,7 @@ body {
 	width: 450px;
 	margin: 0 auto;
 	padding: 30px 0;
-  	font-size: 15px;
+font-size: 15px;
 }
 .signup-form h2 {
 	color: #636363;
