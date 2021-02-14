@@ -9,18 +9,18 @@ function router(app){
 
   app.post("/api/post/property",(req,res,next)=>{
     db.Property.create({
-      address:"pobox4",
-      of_type:"mansion",
-      lot_size:"546",
-      property_name:"rentals",
-      build_year:"2019",
-      postalcode:"50100",
-      Rooms:"9",
-      date:2020-09-09,
-      price:"900",
-      location:"kakamega",
-      description:"cjksahgvmnmcnhasjh",
-      image:"https://www.shutterstock.com/image-photo/riga-latvia-view-old-houese-st-1470631151"
+      address:req.body.address,
+      of_type:req.body.of_type,
+      lot_size:req.body.lot_size,
+      property_name:req.body.property_name,
+      build_year:req.body.build_year,
+      postalcode:req.body.postalcode,
+      Rooms:req.body.Rooms,
+      date:req.body.date,
+      price:req.body.price,
+      location:req.body.location,
+      description:req.body.description,
+      image:req.body.image
       
     }).then((property)=>{
       res.status(201).json(property)
@@ -43,7 +43,7 @@ function router(app){
     app.get('/api/get/property/:id',(req,res,next)=>{
       db.Property.findAll({
         where:{
-          id:1
+          id:req.param.id
         }
       }).then((home)=>{
         res.status(202).json(home)
@@ -56,20 +56,20 @@ function router(app){
 // patching a resource 
 app.patch("/api/update/property/:id",(req,res,next)=>{
   db.Property.update({
-        address:"djshgvc",
-        of_type:"djbhvw wi",
-        lot_size:"333",
-        property_name:"wdiuwvbz",
-        build_year:"2020",
-        postalcode:"94857",
-        Rooms:"657",
-        date:2020-09-09,
-        price:"6000",
-        location:"dskjhg",
-        description:"aslkdhv.wqVH",
+        address:req.body.address,
+        of_type:req.body.of_type,
+        lot_size:req.body.lot_size,
+        property_name:req.body.property_name,
+        build_year:req.body.build_year,
+        postalcode:req.body.postalcode,
+        Rooms:req.body.Rooms,
+        date:req.body.date,
+        price:req.body.price,
+        location:req.body.location,
+        description:req.body.description
   },{
     where:{
-      id:2
+      id:req.param.id
 
     }
   }).then((property)=>{
