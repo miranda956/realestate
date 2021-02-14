@@ -1,3 +1,4 @@
 node_modules
 seeders
 logs
+package-lock.json
