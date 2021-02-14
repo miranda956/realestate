@@ -9,8 +9,8 @@
   </div>
 </template>
 <script>
-import Footer from "../src/components/shared/footer";
-import Navbar from "../src/components/shared/Navbar";
+import Footer from "../src/components/shared/footer.vue";
+import Navbar from "../src/components/shared/Navbar.vue";
 //import Sidebar from './pages/sidebar.vue'
 
 
