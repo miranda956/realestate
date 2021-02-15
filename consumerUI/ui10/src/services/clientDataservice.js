@@ -2,10 +2,6 @@ import http from "../HTTP/http";
 
 class TenantDataService {
 
-    create(data) {
-        return http.post("/api/post/property", data);
-      }
-
   getAllTenants() {
     return http.get("/api/get/clients");
   }
