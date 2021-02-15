@@ -6,8 +6,8 @@ import listproperty from "../components/Property/Listproperty.vue";
 import detailproperty from "../components/Property/detailproperty.vue";
 import login from "../components/shared/login.vue";
 import navbar from "../components/shared/Navbar.vue";
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp, App }from 'vue'
+
 
 import footer from "../components/shared/footer.vue";
 
